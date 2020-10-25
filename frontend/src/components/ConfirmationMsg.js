@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const ConfirmationMsg = ({ customerInformation }) => {
-  console.log(customerInformation);
+  // use the customerInformation (givenName, order and povince) to fill in the blanks in the confirmation message
   return (
     <Wrapper>
       Thanks for ordering, {customerInformation.givenName}! Your order of{" "}

@@ -12,6 +12,7 @@ const App = () => {
   const [disabled, setDisabled] = useState(true);
   const [subStatus, setSubStatus] = useState("idle");
   const [errMessage, setErrMessage] = useState("");
+  // create a new useState that will represent customerData (an empty objet by default)
   const [customerData, setCustomerData] = useState({});
 
   useEffect(() => {
@@ -39,11 +40,12 @@ const App = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-        // we need to fetch data
+        // we need to fetch data in addition to status and error that we were fetching before
         const { status, error, data } = json;
         if (status === "success") {
           setSubStatus("confirmed");
-          // call setCustomerData and use the data from the input
+          // call setCustomerData and use the data we fetched from the back end
+          // that we originally received from the customer input
           setCustomerData(data);
         } else if (error) {
           setSubStatus("error");
@@ -67,6 +69,7 @@ const App = () => {
           {subStatus === "error" && <ErrorMsg>{errMessage}</ErrorMsg>}
         </>
       ) : (
+        // pass the customerData we fetched from the back end to ConfirmationMsg
         <ConfirmationMsg customerInformation={customerData} />
       )}
     </Wrapper>

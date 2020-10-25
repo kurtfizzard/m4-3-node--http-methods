@@ -22,7 +22,7 @@ express()
   // add new endpoints here 👇
 
   .post(`/order`, (req, res) => {
-    console.log(req.body);
+    // deconstruct req.body (the user input that we get from the front end)
     const {
       order,
       size,
@@ -36,6 +36,7 @@ express()
       country,
     } = req.body;
 
+    // create a variable that evalues to true if the customer's name, email or address has already been used
     const hasPlacedOrder = customers.find(
       (customer) =>
         (customer.givenName.toLowerCase() === givenName.toLowerCase() &&
@@ -43,11 +44,19 @@ express()
         customer.email.toLowerCase() === email.toLowerCase() ||
         customer.address.toLowerCase() === address.toLowerCase()
     );
+    // create a variable that evaluates to true if the email is valid (contains "@")
     const isValidEmail = email.includes("@");
+    // create a variable that evaluates to true if the address is valid (country is "canada")
     const isValidAddress = country.toLowerCase() === "canada";
+    // create a variable that evaluates to true if the item is in stock (value is greater than 0)
     const isInStock = stock[order] > 0;
 
-    if (!isValidEmail) {
+    if (hasPlacedOrder) {
+      res.status(200).json({
+        status: "error",
+        error: "repeat-customer",
+      });
+    } else if (!isValidEmail) {
       res.status(200).json({
         status: "error",
         error: "missing-data",
@@ -70,6 +79,7 @@ express()
     } else {
       res.status(200).json({
         status: "success",
+        // if the order is a success we pass the customer information that we'll need to render the success page to the front end
         data: { givenName, order, province },
       });
     }
